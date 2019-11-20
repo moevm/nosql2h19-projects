@@ -10,14 +10,8 @@ MongoClient.connect(url, function (err, client) {
     db = client.db(dbName);
 });
 
-const findDocuments = function(callback) {
-    const collection = db.collection('hello');
-    collection.find({}).toArray(function(err, docs) {
-        assert.equal(err, null);
-        console.log("Found the following records");
-        console.log(docs);
+export const getUsers = function(fioLike, callback) {
+    db.collection('employee').find({fio:  new RegExp(fioLike || "")}).toArray(function(err, docs) {
         callback(docs);
     });
 };
-
-module.exports = {findDocuments};

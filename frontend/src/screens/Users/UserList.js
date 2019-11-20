@@ -11,8 +11,20 @@ import {
     Row,
     Table
 } from 'reactstrap'
+import UserUtil from "./utils/userUtil";
 
 export default class UserList extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            users: []
+        }
+    }
+
+    componentDidMount() {
+        UserUtil.getUserList().then(response => this.setState({...this.state, users: response.data.users}))
+    }
+
     render() {
         return (
             <div className="animated fadeIn">

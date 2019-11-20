@@ -9,18 +9,6 @@ import Sidebar from "./screens/Sidebar";
 const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            text: 'text'
-        }
-    }
-
-    componentDidMount() {
-        axios.get('http://localhost:5000').then((res) => {
-            this.setState({...this.state, text: res.data.text})
-        })
-    }
 
     render() {
         return (
