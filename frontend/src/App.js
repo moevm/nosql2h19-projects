@@ -4,17 +4,8 @@ import {Container} from 'reactstrap';
 import axios from 'axios';
 import routes from './routes';
 import "./App.scss";
-import * as router from 'react-router-dom';
-import {
-    AppSidebar,
-    AppSidebarFooter,
-    AppSidebarForm,
-    AppSidebarHeader,
-    AppSidebarMinimizer,
-    AppSidebarNav
-} from "@coreui/react";
+import Sidebar from "./screens/Sidebar";
 
-import navigation from './nav';
 const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
 
 class App extends Component {
@@ -36,17 +27,11 @@ class App extends Component {
             <div className="app">
                 <BrowserRouter>
                     <div className="app-body">
-                        <AppSidebar fixed display="lg">
-                            <AppSidebarHeader/>
-                            <AppSidebarForm/>
-                            <Suspense>
-                                {/*<AppSidebarNav navConfig={navigation} {...this.props} router={router}/>*/}
-                            </Suspense>
-                            <AppSidebarFooter/>
-                            <AppSidebarMinimizer/>
-                        </AppSidebar>
+                        <Sidebar/>
                         <main className="main">
                             <Container fluid>
+                                <br/>
+                                <br/>
                                 <Suspense fallback={loading()}>
                                     <Switch>
                                         {routes.map((route, idx) => {
