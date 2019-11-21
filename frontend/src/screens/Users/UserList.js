@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import moment from 'moment'
 import {
     Badge,
     Card,
@@ -8,83 +9,118 @@ import {
     Pagination,
     PaginationItem,
     PaginationLink,
+    Form,
+    FormGroup,
+    Label,
+    Input,
+    InputGroup,
+    InputGroupAddon,
+    InputGroupText,
+    Button,
     Row,
     Table
 } from 'reactstrap'
-import UserUtil from "./utils/userUtil";
+import UserUtil from "../../utils/userUtil";
+import "../index.sass"
+import {Link} from "react-router-dom";
 
 export default class UserList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            users: []
-        }
+            users: [],
+            formData: {
+                username: "",
+            }
+        };
+        this.onChange = this.onChange.bind(this);
+        this.getUserList = this.getUserList.bind(this);
+        this.timeout = undefined;
+    }
+
+    onChange({target: {name, value}}) {
+        clearTimeout(this.timeout);
+        this.setState({
+            ...this.state,
+            formData: {...this.state.formData, [name]: value}
+        });
+        this.timeout = setTimeout(this.getUserList, 300);
+    }
+
+    getUserList() {
+
+        UserUtil.getUserList(this.state.formData.username).then(response => this.setState({
+            ...this.state,
+            users: response.data
+        }))
+
     }
 
     componentDidMount() {
-        UserUtil.getUserList().then(response => this.setState({...this.state, users: response.data.users}))
+        this.getUserList();
     }
 
     render() {
         return (
             <div className="animated fadeIn">
                 <Row>
-                    <Col xs="12" lg="12">
+                    <Col xs="12">
                         <Card>
                             <CardHeader>
                                 <i className="fa fa-align-justify"></i> Список сотрудников
                             </CardHeader>
                             <CardBody>
+                                <Row className="align-items-end">
+                                    <Col xs="10">
+                                        <Form className="form-horizontal">
+                                            <FormGroup>
+                                                <Label htmlFor="prependedInput">Поиск по ФИО</Label>
+                                                <div className="controls">
+                                                    <InputGroup className="input-prepend">
+                                                        <InputGroupAddon addonType="prepend">
+                                                            <InputGroupText><i
+                                                                className="fa fa-search"></i></InputGroupText>
+                                                        </InputGroupAddon>
+                                                        <Input
+                                                            value={this.state.formData.username}
+                                                            name="username"
+                                                            onChange={this.onChange}
+                                                            id="prependedInput"
+                                                            size="16"
+                                                            type="text"/>
+                                                    </InputGroup>
+                                                </div>
+                                            </FormGroup>
+                                        </Form>
+                                    </Col>
+                                    <Col xs="2">
+                                        <Link to="/user/create"><Button block color="success" className="mb-3">Добавить</Button></Link>
+                                    </Col>
+                                </Row>
                                 <Table responsive bordered>
                                     <thead>
                                     <tr>
-                                        <th>Username</th>
-                                        <th>Date registered</th>
-                                        <th>Role</th>
-                                        <th>Status</th>
+                                        <th>ФИО</th>
+                                        <th>Дата рождения</th>
+                                        <th>Образование</th>
+                                        <th>Унивеститет</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>Pompeius René</td>
-                                        <td>2012/01/01</td>
-                                        <td>Member</td>
-                                        <td>
-                                            <Badge color="success">Active</Badge>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Paĉjo Jadon</td>
-                                        <td>2012/02/01</td>
-                                        <td>Staff</td>
-                                        <td>
-                                            <Badge color="danger">Banned</Badge>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Micheal Mercurius</td>
-                                        <td>2012/02/01</td>
-                                        <td>Admin</td>
-                                        <td>
-                                            <Badge color="secondary">Inactive</Badge>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Ganesha Dubhghall</td>
-                                        <td>2012/03/01</td>
-                                        <td>Member</td>
-                                        <td>
-                                            <Badge color="warning">Pending</Badge>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Hiroto Šimun</td>
-                                        <td>2012/01/21</td>
-                                        <td>Staff</td>
-                                        <td>
-                                            <Badge color="success">Active</Badge>
-                                        </td>
-                                    </tr>
+                                    {this.state.users.map((user) =>
+                                        <tr>
+                                            <td>{user.fio}</td>
+                                            <td>{moment(user.date_of_birth).format("DD.MM.YYYY")}</td>
+                                            <td>{user.education}</td>
+                                            <td>{user.graduated_institution}</td>
+                                            <td>
+                                                <Link to="/users/update" className="fa fa-pencil font-2xl mr-3"></Link>
+                                                <Link to="/users/delete" className="fa fa-trash-o font-2xl" onClick = {() => { alert('Вы действительно хотите удалить запись?') }}></Link>
+                                            </td>
+                                        </tr>
+                                    )}
+
                                     </tbody>
                                 </Table>
                                 {/*<Pagination>*/}

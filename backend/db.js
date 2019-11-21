@@ -11,7 +11,7 @@ MongoClient.connect(url, function (err, client) {
 });
 
 export const getUsers = function(fioLike, callback) {
-    db.collection('employee').find({fio:  new RegExp(fioLike || "")}).toArray(function(err, docs) {
+    db.collection('employee').find({fio:  new RegExp(fioLike || "", "i")}).toArray(function(err, docs) {
         callback(docs);
     });
 };

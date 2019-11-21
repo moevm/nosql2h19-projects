@@ -8,7 +8,7 @@ export default {
         },
         {
             name: 'Сотрудники',
-            url: '/theme/typography',
+            url: '/user/list',
             icon: 'icon-people',
         },
         {
