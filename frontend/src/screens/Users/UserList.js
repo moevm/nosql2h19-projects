@@ -35,6 +35,7 @@ export default class UserList extends Component {
         };
         this.onChange = this.onChange.bind(this);
         this.getUserList = this.getUserList.bind(this);
+        this.deleteUser = this.deleteUser.bind(this);
         this.timeout = undefined;
     }
 
@@ -48,7 +49,6 @@ export default class UserList extends Component {
     }
 
     getUserList() {
-
         UserUtil.getUserList(this.state.formData.username).then(response => this.setState({
             ...this.state,
             users: response.data
@@ -58,6 +58,11 @@ export default class UserList extends Component {
 
     componentDidMount() {
         this.getUserList();
+    }
+
+
+    deleteUser(id) {
+        UserUtil.deleteUser(id).then(this.getUserList);
     }
 
     render() {
@@ -115,8 +120,8 @@ export default class UserList extends Component {
                                             <td>{user.education}</td>
                                             <td>{user.graduated_institution}</td>
                                             <td>
-                                                <Link to="/users/update" className="fa fa-pencil font-2xl mr-3"></Link>
-                                                <Link to="/users/delete" className="fa fa-trash-o font-2xl" onClick = {() => { alert('Вы действительно хотите удалить запись?') }}></Link>
+                                                <Link to={"/user/update/" + user._id} className="fa fa-pencil font-2xl mr-3"></Link>
+                                                <i className="fa fa-trash-o font-2xl" onClick={() => this.deleteUser(user._id)}></i>
                                             </td>
                                         </tr>
                                     )}
