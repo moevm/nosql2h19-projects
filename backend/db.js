@@ -162,3 +162,18 @@ export const insertProject = function (nameLike, callback) {
         callback(docs);
     });
 };
+
+export const insertParticipant = function (nameLike, callback) {
+    db.collection('project').update({
+        _id: ObjectId("5db00ba20a1300004f00190b")
+    }, {
+        $push: {
+            participants: {
+                "employee": ObjectId("5daf5117cab8f846d8ec2223"),
+                "role": "Backend-разработчик"
+            }
+        }
+    }).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
