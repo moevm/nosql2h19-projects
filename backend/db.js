@@ -177,3 +177,21 @@ export const insertParticipant = function (nameLike, callback) {
         callback(docs);
     });
 };
+
+export const insertTask = function (nameLike, callback) {
+    db.collection('project').update({
+        _id: ObjectId("5db00ba20a1300004f00190b")
+    }, {
+        $push: {
+            tasks: {
+                "key": "t12745937",
+                "employee": ObjectId("5daf5117cab8f846d8ec2223"),
+                "name": "Интеграция переходов между слайдами блока Our opportunities",
+                "date_of_control": "2019-10-18T00:00:00.000Z",
+                "status": "Выполнено в срок"
+            }
+        }
+    }).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
