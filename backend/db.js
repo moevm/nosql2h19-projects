@@ -200,8 +200,27 @@ export const updateProject = function (nameLike, callback) {
     db.collection('project').update({
         _id: ObjectId("5db00ba20a1300004f00190b")
     }, {
-        name: "PaxPeer",
-        tags: "Hello"
+        $set: {
+            tags: "Hello"
+        }
+    }, {
+        upsert: false
+    }).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
+
+export const updateParticipant = function (nameLike, callback) {
+    db.collection('project').update({
+        $and: [{
+            _id: ObjectId("5db00ba20a1300004f00190b")
+        }, {
+            "participants.employee": ObjectId("5daf52adcab8f846d8ec222c")
+        }]
+    }, {
+        $set: {
+            "participants.$.role": "НОВАЯ РОЛЬ"
+        }
     }, {
         upsert: false
     }).toArray(function (err, docs) {
