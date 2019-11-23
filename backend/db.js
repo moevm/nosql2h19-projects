@@ -156,3 +156,9 @@ export const removeTask = function (nameLike, callback) {
         callback(docs);
     });
 };
+
+export const insertProject = function (nameLike, callback) {
+    db.collection('project').insertOne({"name":"PaxPeer","tags":"Теги"}).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
