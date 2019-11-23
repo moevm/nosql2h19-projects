@@ -120,3 +120,11 @@ export const getTasks = function (nameLike, callback) {
         callback(docs);
     });
 };
+
+export const removeProject = function (nameLike, callback) {
+    db.collection('project').remove({
+        _id: ObjectId("5db009780a1300004f001908")
+    }).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
