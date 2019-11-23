@@ -54,3 +54,20 @@ export const deleteUser = function (id, callback) {
         callback(docs);
     });
 };
+
+export const getProjects = function (nameLike, callback) {
+    db.collection('project').aggregate(
+        {
+            "$project": {
+                name: true,
+                tags: true,
+                count: {
+                    $size: "$participants"
+                }
+            }
+        }
+    ).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
+
