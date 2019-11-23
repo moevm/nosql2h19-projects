@@ -195,3 +195,16 @@ export const insertTask = function (nameLike, callback) {
         callback(docs);
     });
 };
+
+export const updateProject = function (nameLike, callback) {
+    db.collection('project').update({
+        _id: ObjectId("5db00ba20a1300004f00190b")
+    }, {
+        name: "PaxPeer",
+        tags: "Hello"
+    }, {
+        upsert: false
+    }).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
