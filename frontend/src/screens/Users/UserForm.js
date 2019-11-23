@@ -5,7 +5,7 @@ import {
     CardBody,
     CardHeader,
     Col,
-
+    Label,
     Form,
     FormGroup,
 
@@ -37,6 +37,7 @@ export default class UserForm extends Component {
     addUser() {
         UserUtil.addUser(this.state.formData).then(() => this.props.history.push("/user/list"));
     }
+
     updateUser() {
         UserUtil.updateUser(this.state.formData).then(() => this.props.history.push("/user/list"));
     }
@@ -64,7 +65,6 @@ export default class UserForm extends Component {
     }
 
     render() {
-        console.log(this.state.formData);
         return (
             <div className="animated fadeIn">
                 <Row>
@@ -77,30 +77,27 @@ export default class UserForm extends Component {
                             <CardBody>
                                 <Form>
                                     <FormGroup>
-                                        <InputGroup>
-                                            <Input value={this.state.formData.username} type="text"
-                                                   onChange={this.onChange} name="username" placeholder="ФИО"/>
-                                        </InputGroup>
+                                        <Label htmlFor="username">Имя пользователя</Label>
+                                        <Input value={this.state.formData.username} type="text"
+                                               onChange={this.onChange} name="username" placeholder="ФИО"/>
+
                                     </FormGroup>
                                     <FormGroup>
-                                        <InputGroup>
-                                            <Input value={this.state.formData.dateOfBirth} type="text"
-                                                   onChange={this.onChange} name="dateOfBirth"
-                                                   placeholder="Дата рождения"/>
-                                        </InputGroup>
+                                        <Label htmlFor="dateOfBirth">Дата рождения</Label>
+                                        <Input value={this.state.formData.dateOfBirth} type="text"
+                                               onChange={this.onChange} name="dateOfBirth"
+                                               placeholder="Дата рождения"/>
                                     </FormGroup>
                                     <FormGroup>
-                                        <InputGroup>
-                                            <Input value={this.state.formData.education} type="text"
-                                                   onChange={this.onChange} name="education" placeholder="Образование"/>
-                                        </InputGroup>
+                                        <Label htmlFor="education">Образование</Label>
+                                        <Input value={this.state.formData.education} type="text"
+                                               onChange={this.onChange} name="education" placeholder="Образование"/>
                                     </FormGroup>
                                     <FormGroup>
-                                        <InputGroup>
-                                            <Input value={this.state.formData.university} type="text"
-                                                   onChange={this.onChange} name="university"
-                                                   placeholder="Университет"/>
-                                        </InputGroup>
+                                        <Label htmlFor="university">Университет</Label>
+                                        <Input value={this.state.formData.university} type="text"
+                                               onChange={this.onChange} name="university"
+                                               placeholder="Университет"/>
                                     </FormGroup>
                                     <FormGroup className="form-actions">
                                         {this.props.match.params.id ?
