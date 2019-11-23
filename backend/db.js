@@ -227,3 +227,17 @@ export const updateParticipant = function (nameLike, callback) {
         callback(docs);
     });
 };
+
+export const updateTask = function (nameLike, callback) {
+    db.collection('project').update({
+        "tasks.key": "t12742954"
+    }, {
+        $set: {
+            "tasks.$.status": "В работе"
+        }
+    }, {
+        upsert: false
+    }).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
