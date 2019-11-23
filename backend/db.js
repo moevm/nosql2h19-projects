@@ -71,3 +71,26 @@ export const getProjects = function (nameLike, callback) {
     });
 };
 
+export const getParticipants = function (nameLike, callback) {
+    db.collection('project').aggregate({
+        $unwind: "$participants"
+    }, {
+        $match: {
+            "_id": ObjectId("5db00ba20a1300004f00190b")
+        }
+    }, {
+        $lookup: {
+            from: "Employee",
+            localField: "participants.employee",
+            foreignField: "_id",
+            as: "join_table"
+        }
+    }, {
+        $project: {
+            "participants.role": 1,
+            "join_table.fio": 1,
+        }
+    }).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
