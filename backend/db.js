@@ -142,3 +142,17 @@ export const removeParticipant = function (nameLike, callback) {
         callback(docs);
     });
 };
+
+export const removeTask = function (nameLike, callback) {
+    db.collection('project').update({
+        _id: ObjectId("5db00ba20a1300004f00190b")
+    }, {
+        $pull: {
+            tasks: {
+                "key": "t12745937"
+            }
+        }
+    }).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
