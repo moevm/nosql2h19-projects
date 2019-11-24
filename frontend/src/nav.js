@@ -13,7 +13,7 @@ export default {
         },
         {
             name: 'Проекты',
-            url: '/base',
+            url: '/project/list',
             icon: 'fa fa-folder-open-o',
         },
         {

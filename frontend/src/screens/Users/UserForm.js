@@ -56,7 +56,7 @@ export default class UserForm extends Component {
                     ...this.state, formData: {
                         _id: data._id,
                         username: data.fio,
-                        dateOfBirth: moment(data.date_of_birth).format("DD.MM.YYYY"),
+                        dateOfBirth: moment(data.date_of_birth).format("YYYY-MM-DD"),
                         education: data.education,
                         university: data.graduated_institution,
                     }
@@ -84,7 +84,7 @@ export default class UserForm extends Component {
                                     </FormGroup>
                                     <FormGroup>
                                         <Label htmlFor="dateOfBirth">Дата рождения</Label>
-                                        <Input value={this.state.formData.dateOfBirth} type="text"
+                                        <Input value={this.state.formData.dateOfBirth} type="date"
                                                onChange={this.onChange} name="dateOfBirth"
                                                placeholder="Дата рождения"/>
                                     </FormGroup>
