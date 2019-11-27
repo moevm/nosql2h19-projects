@@ -108,32 +108,48 @@ export const getProjectParticipants = function (projectId, callback) {
     });
 };
 
-// export const getTasks = function (nameLike, callback) {
-//     db.collection('project').aggregate({
-//         $unwind: "$tasks"
-//     }, {
-//         $match: {
-//             "_id": ObjectId("5db00ba20a1300004f00190b")	}
-//     }, {
-//         $lookup: {
-//             from: "Employee",
-//             localField: "tasks.employee",
-//             foreignField: "_id",
-//             as: "join_table"
-//         }
-//     }, {
-//         $project: {
-//             "tasks.key": 1,
-//             "tasks.name": 1,
-//             "join_table.fio": 1,
-//             "tasks.date_of_control": 1,
-//             "tasks.status": 1
-//         }
-//     }).toArray(function (err, docs) {
-//         callback(docs);
-//     });
-// };
-//
+export const getProjectTasks = function (projectId, callback) {
+    db.collection('project').aggregate([{
+        $unwind: "$tasks"
+    }, {
+        $match: {
+            "_id": ObjectID(projectId)
+        }
+    }, {
+        $lookup: {
+            from: "employee",
+            localField: "tasks.employee",
+            foreignField: "_id",
+            as: "join_table"
+        }
+    }, {
+        $project: {
+            "_id": 0,
+            "key": "$tasks.key",
+            "name": "$tasks.name",
+            "date_of_control": "$tasks.date_of_control",
+            "status": "$tasks.status",
+            "join_table": {"$arrayElemAt": ['$join_table', 0]},
+        }
+    }, {
+        $project: {
+            "_id": 0,
+            "key": "$key",
+            "name": "$name",
+            "date_of_control": "$date_of_control",
+            "status": "$status",
+            "fio": '$join_table.fio',
+        }
+    }, {
+        $sort: {
+            date_of_control: -1
+        }
+    }
+    ]).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
+
 export const deleteProject = function (id, callback) {
     db.collection('project').remove({
         _id: ObjectID(id),
@@ -141,7 +157,6 @@ export const deleteProject = function (id, callback) {
         callback(docs);
     });
 };
-
 
 
 // export const removeParticipant = function (nameLike, callback) {

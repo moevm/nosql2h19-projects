@@ -11,6 +11,11 @@ export default class ProjectUtil {
             {params: {id: projectId}})
     }
 
+    static async getProjectTasks(projectId) {
+        return await axios.get("http://localhost:5000/project/tasks",
+            {params: {id: projectId}})
+    }
+
     // static async getUser(id){
     //     return await axios.get("http://localhost:5000/user/get", {params: {id: id}})
     // }
