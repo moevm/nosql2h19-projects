@@ -118,7 +118,7 @@ export default class ProjectList extends Component {
                                             <td>
                                                 {/*<Link to={"/user/update/" + user._id} className="fa fa-pencil font-2xl mr-3"></Link>*/}
                                                 {/*<i className="fa fa-trash-o font-2xl" onClick={() => this.deleteUser(user._id)}></i>*/}
-                                                <Link to={"/project/review/" + project._id} className="fa fa-eye font-2xl mr-3"></Link>
+                                                <Link to={"/project/review/" + project._id + "/employee/list"} className="fa fa-eye font-2xl mr-3"></Link>
                                                 <Link to={"/user/update/"} className="fa fa-pencil font-2xl mr-3"></Link>
                                                 <i className="fa fa-trash-o font-2xl" onClick={() => this.deleteProject(project._id)}></i>
                                             </td>

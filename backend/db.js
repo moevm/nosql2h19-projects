@@ -100,6 +100,7 @@ export const getProjectParticipants = function (projectId, callback) {
         $project: {
             "_id": "$join_table._id",
             "fio": "$join_table.fio",
+            // "graduated_institution": "$join_table.graduated_institution",
             "role": "$role",
         }
     }

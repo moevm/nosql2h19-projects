@@ -5,6 +5,7 @@ import ProjectList from "./screens/Projects/ProjectList";
 import ProjectReview from "./screens/Projects/ProjectReview";
 import ProjectReviewEmployeeList from "./screens/Projects/ProjectReviewEmployeeList";
 import ProjectReviewTaskList from "./screens/Projects/ProjectReviewTaskList";
+import ProjectReviewEmployeeEdit from "./screens/Projects/ProjectReviewEmployeeEdit";
 
 function Test() {
     return <div>AAAAAAAAAAAAA</div>
@@ -23,6 +24,8 @@ const routes = [
     {path: '/user/update/:id', exact: true, name: 'Обновление сотрудника', component: UserForm},
     {path: '/project/list', exact: true, name: 'Список проектов', component: ProjectList},
     {path: '/project/review/:id', name: 'Просмотр проекта', component: ProjectReview},
+    {path: '/project/update-employee/:projectId/:participantId', exact: true, name: '', component: ProjectReviewEmployeeEdit},
+    {path: '/project/add-employee/:projectId', exact: true, name: '', component: ProjectReviewEmployeeEdit},
 ];
 
 export default routes;
