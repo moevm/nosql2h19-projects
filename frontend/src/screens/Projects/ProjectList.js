@@ -64,7 +64,6 @@ export default class ProjectList extends Component {
     }
 
     render() {
-        console.log(this.state.projects);
         return (
             <div className="animated fadeIn">
                 <Row>

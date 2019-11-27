@@ -1,8 +1,14 @@
 import axios from 'axios';
 
 export default class ProjectUtil {
-    static async getProjectList(name){
-        return await axios.get("http://localhost:5000/project/list", {params: {name: (name !== "" ? name : undefined)}})
+    static async getProjectList(name) {
+        return await axios.get("http://localhost:5000/project/list",
+            {params: {name: (name !== "" ? name : undefined)}})
+    }
+
+    static async getProjectParticipants(projectId) {
+        return await axios.get("http://localhost:5000/project/participants",
+            {params: {id: projectId}})
     }
 
     // static async getUser(id){
@@ -17,7 +23,7 @@ export default class ProjectUtil {
     //     return await axios.post("http://localhost:5000/user/update", user)
     // }
     //
-    static async deleteProject(id){
+    static async deleteProject(id) {
         return await axios.post("http://localhost:5000/project/delete", {_id: id})
     }
 }

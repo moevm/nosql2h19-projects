@@ -1,4 +1,4 @@
-import {getProjects, deleteProject} from '../db'
+import {getProjects, deleteProject, getProjectParticipants} from '../db'
 var express = require('express');
 var router = express.Router();
 
@@ -8,6 +8,13 @@ router.get('/list', function(req, res, next) {
         res.end(JSON.stringify(projects))
     })
 });
+
+router.get('/participants', function(req, res, next) {
+    getProjectParticipants(req.query.id, function (projects) {
+        res.end(JSON.stringify(projects))
+    })
+});
+
 
 // router.get('/get', function(req, res, next) {
 //     getUser(req.query.id, function (user) {

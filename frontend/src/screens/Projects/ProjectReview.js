@@ -19,22 +19,24 @@ class ProjectReview extends Component {
             <div className="animated fadeIn">
                 <Card>
                     <CardBody>
-                        <Nav pills>
+                        <Nav tabs>
                             <Switch>
-
                                 {reviewRoutes.map(route =>
                                     <Route
-
                                         path={route.path}
                                         exact={route.exact}
-
                                         render={props => <Fragment>
-
                                             {reviewRoutes.map(_route =>
                                                 <NavItem>
-                                                    <NavLink href={_route.path.replace(":id", this.props.match.params.id)} active={this.props.location.pathname === _route.path.replace(":id", this.props.match.params.id)}> {_route.title}</NavLink>
+                                                    <Link to={_route.path.replace(":id", this.props.match.params.id)}>
+                                                        <NavLink
+                                                            active={this.props.location.pathname === _route.path.replace(":id", this.props.match.params.id)}>
+                                                            {_route.title}
+                                                        </NavLink>
+                                                    </Link>
                                                 </NavItem>
                                             )}
+                                            <route.component {...props}/>
                                         </Fragment>
                                         }
                                     />

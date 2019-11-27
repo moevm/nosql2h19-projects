@@ -3,13 +3,14 @@ import UserList from "./screens/Users/UserList";
 import UserForm from "./screens/Users/UserForm";
 import ProjectList from "./screens/Projects/ProjectList";
 import ProjectReview from "./screens/Projects/ProjectReview";
+import ProjectReviewEmployeeList from "./screens/Projects/ProjectReviewEmployeeList";
 
 function Test() {
     return <div>AAAAAAAAAAAAA</div>
 }
 
 export const reviewRoutes = [
-    {path: '/project/review/:id/employee/list', exact: true, name: 'Список сотрудников проекта', title: "Сотрудники", component: Fragment},
+    {path: '/project/review/:id/employee/list', exact: true, name: 'Список сотрудников проекта', title: "Сотрудники", component: ProjectReviewEmployeeList},
     {path: '/project/review/:id/task/list', exact: true, name: 'Список задач проекта', title: "Задачи", component: Fragment},
 ];
 
