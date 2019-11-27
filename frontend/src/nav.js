@@ -18,7 +18,7 @@ export default {
         },
         {
             name: 'Конфигурация',
-            url: '/base',
+            url: '/config',
             icon: 'icon-settings',
         }
     ],

@@ -68,7 +68,7 @@ export default class Config extends Component {
                                     Данные успешно сохранены!
                                 </Alert>
                                 <FormGroup>
-                                    <Input name="importFile" type="file" accept='.json' value={this.state.fileName}
+                                    <Input name="importFile" type="file" accept='.zip' value={this.state.fileName}
                                            onChange={this.handleFileChange}/>
                                 </FormGroup>
                                 <div className="form-actions">

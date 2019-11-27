@@ -159,6 +159,120 @@ export const deleteProject = function (id, callback) {
     });
 };
 
+export const closestDeadlines = function (callback) {
+    db.collection("project").aggregate([
+        {
+            $unwind: "$tasks"
+        },
+        {
+            $lookup: {
+                from: "employee",
+                localField: "tasks.employee",
+                foreignField: "_id",
+                as: "join_table"
+            }
+        },
+        {
+            $match: {
+                $and: [{
+                    "tasks.date_of_control": {
+                        $lte: new Date((new Date().getTime() + (7 * 24 * 60 * 60 * 1000)))
+                    }
+                }, {
+                    "tasks.date_of_control": {
+                        $gte: new Date()
+                    }
+                }, {
+                    "tasks.status": {$eq: "В работе"}
+                }
+                ]
+            }
+        },
+        {
+            $project: {
+                "name": 1,
+                "task": "$tasks.name",
+                "date_of_control": "$tasks.date_of_control",
+                "join_table": {"$arrayElemAt": ['$join_table', 0]},
+            }
+        },
+        {
+            $project: {
+                "name": 1,
+                "task": 1,
+                "date_of_control": 1,
+                "fio": '$join_table.fio',
+            }
+        },
+        {
+            $sort: {
+                "tasks.date_of_control": 1,
+
+            }
+        }
+    ]).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
+
+export const employeeRating = function (callback) {
+    db.collection("project").aggregate([
+        {
+            $unwind: "$tasks"
+        },
+        {
+            $lookup: {
+                from: "employee",
+                localField: "tasks.employee",
+                foreignField: "_id",
+                as: "join_table"
+            }
+        },
+        {
+            $match: {
+                $and: [{
+                    "tasks.date_of_control": {
+                        $gte: new Date("2019-10-01T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.date_of_control": {
+                        $lte: new Date("2019-12-31T00:00:00.000+00:00")
+                    }
+                }]
+            }
+        },
+        {
+            $group: {
+                _id: "$join_table.fio",
+                "rating": {
+                    $sum: {
+                        $cond: [{
+                            $eq: ["$tasks.status", "Выполнено в срок"]
+                        }, 1, {
+                            $cond: [{
+                                $eq: ["$tasks.status", "Выполнено не в срок"]
+                            }, -5, 0]
+                        }]
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                "_id": 0,
+                "rating": 1,
+                "fio": {"$arrayElemAt": ['$_id', 0]},
+            }
+        },
+        {
+            $sort: {
+                "rating": - 1,
+            }
+        }
+    ]).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
 
 // export const removeParticipant = function (nameLike, callback) {
 //     db.collection('project').update({
