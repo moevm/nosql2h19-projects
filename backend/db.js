@@ -590,3 +590,54 @@ export const institutionRating = function (callback) {
         callback(docs);
     });
 };
+export const educationRating = function (callback) {
+    db.getCollection("Project").aggregate([
+        {
+            $unwind: "$tasks"
+        },
+        {
+            $lookup: {
+                from: "Employee",
+                localField: "tasks.employee",
+                foreignField: "_id",
+                as: "join_table"
+            }
+        },
+        {
+            $match: {
+                $and: [{
+                    "tasks.date_of_control": {
+                        $gte: new Date("2019-10-01T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.date_of_control": {
+                        $lte: new Date("2019-12-31T00:00:00.000+00:00")
+                    }
+                }]
+            }
+        },
+        {
+            $group: {
+                _id: "$join_table.education",
+                "Rating": {
+                    $sum: {
+                        $cond: [{
+                            $eq: ["$tasks.status", "Выполнено в срок"]
+                        }, 1, {
+                            $cond: [{
+                                $eq: ["$tasks.status", "Выполнено не в срок"]
+                            }, - 1, 0]
+                        }]
+                    }
+                }
+            }
+        },
+        {
+            $sort: {
+                "Rating": - 1
+            }
+        }
+    ]).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
