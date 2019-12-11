@@ -5,7 +5,10 @@ import {
     getProjectTasks,
     createProject,
     updateProject,
-    getProject
+    getProject,
+    createParticipant, getNotProjectParticipants,
+
+
 } from '../db'
 var express = require('express');
 var router = express.Router();
@@ -19,6 +22,12 @@ router.get('/list', function(req, res, next) {
 
 router.get('/participants', function(req, res, next) {
     getProjectParticipants(req.query.id, function (participants) {
+        res.end(JSON.stringify(participants))
+    })
+});
+
+router.get('/not-participants', function(req, res, next) {
+    getNotProjectParticipants(req.query.id, function (participants) {
         res.end(JSON.stringify(participants))
     })
 });
@@ -50,10 +59,15 @@ router.post('/update/', function(req, res, next) {
 });
 
 router.post('/delete', function(req, res, next) {
-    deleteProject(req.body._id, function () {
+    deleteProject(c, function () {
         res.end("OK")
     })
 });
 
+router.post('/create-participant', function(req, res, next) {
+    createParticipant(req.body, req.body._id, function () {
+        res.end("OK")
+    })
+});
 
 module.exports = router;

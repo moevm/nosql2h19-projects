@@ -26,8 +26,8 @@ const routes = [
     {path: '/project/create', exact: true, name: 'Создание проекта', component: ProjectForm},
     {path: '/project/update/:id', exact: true, name: 'Обновление проекта', component: ProjectForm},
     {path: '/project/review/:id', name: 'Просмотр проекта', component: ProjectReview},
-    {path: '/project/update-employee/:projectId/:participantId', exact: true, name: '', component: ProjectReviewEmployeeForm},
-    {path: '/project/add-employee/:projectId', exact: true, name: '', component: ProjectReviewEmployeeForm},
+    {path: '/project/update-participant/:projectId/:participantId', exact: true, name: '', component: ProjectReviewEmployeeForm},
+    {path: '/project/create-participant/:projectId', exact: true, name: '', component: ProjectReviewEmployeeForm},
 ];
 
 export default routes;

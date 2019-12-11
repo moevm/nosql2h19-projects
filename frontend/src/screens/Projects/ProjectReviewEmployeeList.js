@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {
     Button,
     Card,
@@ -37,28 +37,32 @@ export default class ProjectReviewEmployeeList extends Component {
 
     render() {
         return (
-            <Table responsive bordered>
-                <thead>
-                <tr>
-                    <th>Сотрудник</th>
-                    <th>Роль</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {this.state.participants.map((participant) =>
-                    <tr key={participant._id}>
-                        <td>{participant.fio}</td>
-                        <td>{participant.role}</td>
-                        <td>
-                            <Link to={"/user/update/"}
-                                  className="fa fa-pencil font-2xl mr-3"/>
-                            <i className="fa fa-trash-o font-2xl"
-                               onClick={() => this.deleteProject(participant._id)}/>
-                        </td>
+            <Fragment>
+                <Link to={"/project/list"} style={{marginLeft: 'auto'}}><Button block color="secondary" className="mb-3 btn-project">К списку проектов</Button></Link>
+                <Link to={"/project/create-participant/" + this.props.match.params.id} style={{marginLeft: '15px'}}><Button block color="success" className="mb-3 btn-project">Добавить</Button></Link>
+                <Table responsive bordered>
+                    <thead>
+                    <tr>
+                        <th>Сотрудник</th>
+                        <th>Роль</th>
+                        <th></th>
                     </tr>
-                )}
-                </tbody>
-            </Table>)
+                    </thead>
+                    <tbody>
+                    {this.state.participants.map((participant) =>
+                        <tr key={participant._id}>
+                            <td>{participant.fio}</td>
+                            <td>{participant.role}</td>
+                            <td>
+                                <Link to={"/user/update/"}
+                                      className="fa fa-pencil font-2xl mr-3"/>
+                                <i className="fa fa-trash-o font-2xl"
+                                   onClick={() => this.deleteProject(participant._id)}/>
+                            </td>
+                        </tr>
+                    )}
+                    </tbody>
+                </Table>
+            </Fragment>)
     }
 }

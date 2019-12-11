@@ -11,6 +11,11 @@ export default class ProjectUtil {
             {params: {id: projectId}})
     }
 
+    static async getNotProjectParticipants(projectId) {
+        return await axios.get("http://localhost:5000/project/not-participants",
+            {params: {id: projectId}})
+    }
+
     static async getProjectTasks(projectId) {
         return await axios.get("http://localhost:5000/project/tasks",
             {params: {id: projectId}})
@@ -31,4 +36,9 @@ export default class ProjectUtil {
     static async deleteProject(id) {
         return await axios.post("http://localhost:5000/project/delete", {_id: id})
     }
+
+    static async addProjectParticipant(participant, projectId){
+        return await axios.post("http://localhost:5000/project/create", participant, projectId)
+    }
+
 }

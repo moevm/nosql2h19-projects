@@ -17,11 +17,6 @@ import moment from "moment";
 import Select from 'react-select';
 import ProjectUtil from "../../utils/projectUtil";
 
-const options = [
-    {value: 'chocolate', label: 'Chocolate'},
-    {value: 'strawberry', label: 'Strawberry'},
-    {value: 'vanilla', label: 'Vanilla'},
-];
 
 export default class ProjectReviewEmployeeForm extends Component {
     constructor(props) {
@@ -36,13 +31,13 @@ export default class ProjectReviewEmployeeForm extends Component {
         };
         this.onChange = this.onChange.bind(this);
         this.onChangeSelect = this.onChangeSelect.bind(this);
-        this.addProjectEmployee = this.addUser.bind(this);
-        this.projectEmployee = this.updateUser.bind(this);
+         this.addProjectParticipant = this.addProjectParticipant.bind(this);
+        // this.projectEmployee = this.updateUser.bind(this);
 
     }
 
-    addUser() {
-        UserUtil.addUser(this.state.formData).then(() => this.props.history.push("/user/list"));
+    addProjectParticipant() {
+        ProjectUtil.addProjectParticipant(this.state.formData, this.props.match.params.projectId).then(() => this.props.history.push(`/project/review/${this.props.match.params.projectId}/employee/list`));
     }
 
     updateUser() {
@@ -74,7 +69,7 @@ export default class ProjectReviewEmployeeForm extends Component {
             //         }
             //     }))
         }
-        ProjectUtil.getProjectParticipants(this.props.match.params.projectId).then(response => this.setState({
+        ProjectUtil.getNotProjectParticipants(this.props.match.params.projectId).then(response => this.setState({
             ...this.state,
             participants: response.data.map(participant => ({
                 value: participant._id,
@@ -91,7 +86,7 @@ export default class ProjectReviewEmployeeForm extends Component {
                     <Col xs="12" sm="4">
                         <Card>
                             <CardHeader>
-                                {this.props.match.params.id ?
+                                {this.props.match.params.participantId ?
                                     "Редактирование сотрудника" : "Добавление сотрудника"}
                             </CardHeader>
                             <CardBody>
@@ -112,12 +107,12 @@ export default class ProjectReviewEmployeeForm extends Component {
                                                placeholder="Роль"/>
                                     </FormGroup>
                                     <FormGroup className="form-actions">
-                                        {this.props.match.params.id ?
+                                        {this.props.match.params.participantId ?
                                             <Button size="sm" color="primary" onClick={this.updateUser}
                                                     className="mr-3">Обновить</Button> :
-                                            <Button size="sm" color="success" onClick={this.addUser}
+                                            <Button size="sm" color="success" onClick={this.addProjectParticipant}
                                                     className="mr-3">Добавить</Button>}
-                                        <Link to="/user/list"><Button type="submit" size="sm"
+                                        <Link to={"/project/review/" + this.props.match.params.projectId + "/employee/list"}><Button type="submit" size="sm"
                                                                       color="secondary">Отмена</Button></Link>
                                     </FormGroup>
                                 </Form>

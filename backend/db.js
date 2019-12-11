@@ -109,6 +109,30 @@ export const getProjectParticipants = function (projectId, callback) {
     });
 };
 
+export const getNotProjectParticipants = function (projectId, callback) {
+    db.collection('employee').aggregate([{
+        $lookup: {
+            from: "project",
+            localField: "_id",
+            foreignField: "participants.employee",
+            as: "join_table"
+        }
+    }, {
+        $match: {
+            "join_table._id": {
+                $ne: ObjectID(projectId)
+            }
+        }
+    }, {
+        $project: {
+            "fio": 1
+        }
+    }]).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
+
+
 export const getProjectTasks = function (projectId, callback) {
     db.collection('project').aggregate([{
         $unwind: "$tasks"
@@ -274,19 +298,7 @@ export const employeeRating = function (callback) {
     });
 };
 
-// export const removeParticipant = function (nameLike, callback) {
-//     db.collection('project').update({
-//         _id: ObjectId("5db00ba20a1300004f00190b")
-//     }, {
-//         $pull: {
-//             participants: {
-//                 "employee": ObjectId("5daf5117cab8f846d8ec2223")
-//             }
-//         }
-//     }).toArray(function (err, docs) {
-//         callback(docs);
-//     });
-// };
+
 //
 // export const removeTask = function (nameLike, callback) {
 //     db.collection('project').update({
@@ -334,15 +346,49 @@ export const updateProject = function (project, callback) {
         callback(docs);
     });
 };
-//
-// export const insertParticipant = function (nameLike, callback) {
+
+export const createParticipant = function (participant, projectId, callback) {
+    db.collection('project').update({
+        _id: ObjectID(projectId)
+    }, {
+        $push: {
+            participants: {
+                "employee": ObjectID(participant._id),
+                "role": participant.role,
+            }
+        }
+    }, function (err, docs) {
+        callback(docs);
+    });
+};
+
+
+
+// export const updateParticipant = function (nameLike, callback) {
+//     db.collection('project').update({
+//         $and: [{
+//             _id: ObjectId("5db00ba20a1300004f00190b")
+//         }, {
+//             "participants.employee": ObjectId("5daf52adcab8f846d8ec222c")
+//         }]
+//     }, {
+//         $set: {
+//             "participants.$.role": "НОВАЯ РОЛЬ"
+//         }
+//     }, {
+//         upsert: false
+//     }).toArray(function (err, docs) {
+//         callback(docs);
+//     });
+// };
+
+// export const removeParticipant = function (nameLike, callback) {
 //     db.collection('project').update({
 //         _id: ObjectId("5db00ba20a1300004f00190b")
 //     }, {
-//         $push: {
+//         $pull: {
 //             participants: {
-//                 "employee": ObjectId("5daf5117cab8f846d8ec2223"),
-//                 "role": "Backend-разработчик"
+//                 "employee": ObjectId("5daf5117cab8f846d8ec2223")
 //             }
 //         }
 //     }).toArray(function (err, docs) {
@@ -369,24 +415,7 @@ export const updateProject = function (project, callback) {
 // };
 //
 
-//
-// export const updateParticipant = function (nameLike, callback) {
-//     db.collection('project').update({
-//         $and: [{
-//             _id: ObjectId("5db00ba20a1300004f00190b")
-//         }, {
-//             "participants.employee": ObjectId("5daf52adcab8f846d8ec222c")
-//         }]
-//     }, {
-//         $set: {
-//             "participants.$.role": "НОВАЯ РОЛЬ"
-//         }
-//     }, {
-//         upsert: false
-//     }).toArray(function (err, docs) {
-//         callback(docs);
-//     });
-// };
+
 //
 // export const updateTask = function (nameLike, callback) {
 //     db.collection('project').update({
@@ -401,3 +430,4 @@ export const updateProject = function (project, callback) {
 //         callback(docs);
 //     });
 // };
+
