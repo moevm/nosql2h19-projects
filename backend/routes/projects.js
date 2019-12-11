@@ -6,7 +6,7 @@ import {
     createProject,
     updateProject,
     getProject,
-    createParticipant, getNotProjectParticipants, deleteParticipant,
+    createParticipant, getNotProjectParticipants, deleteParticipant, updateParticipant
 
 
 } from '../db'
@@ -72,6 +72,12 @@ router.post('/create-participant', function(req, res, next) {
 
 router.post('/delete-participant', function(req, res, next) {
     deleteParticipant(req.body, function () {
+        res.end("OK")
+    })
+});
+
+router.post('/update-participant', function(req, res, next) {
+    updateParticipant(req.body, function () {
         res.end("OK")
     })
 });

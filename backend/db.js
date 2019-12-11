@@ -362,25 +362,23 @@ export const createParticipant = function (participant, callback) {
     });
 };
 
-
-
-// export const updateParticipant = function (nameLike, callback) {
-//     db.collection('project').update({
-//         $and: [{
-//             _id: ObjectId("5db00ba20a1300004f00190b")
-//         }, {
-//             "participants.employee": ObjectId("5daf52adcab8f846d8ec222c")
-//         }]
-//     }, {
-//         $set: {
-//             "participants.$.role": "НОВАЯ РОЛЬ"
-//         }
-//     }, {
-//         upsert: false
-//     }).toArray(function (err, docs) {
-//         callback(docs);
-//     });
-// };
+export const updateParticipant = function (participant, callback) {
+    db.collection('project').update({
+        $and: [{
+            _id: ObjectID(participant.projectId)
+        }, {
+            "participants.employee": ObjectID(participant.participantId)
+        }]
+    }, {
+        $set: {
+            "participants.$.role": participant.role,
+        }
+    }, {
+        upsert: false
+    }).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
 
 export const deleteParticipant = function (participant, callback) {
     db.collection('project').update({

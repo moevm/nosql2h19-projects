@@ -55,7 +55,7 @@ export default class ProjectReviewEmployeeList extends Component {
                             <td>{participant.fio}</td>
                             <td>{participant.role}</td>
                             <td>
-                                <Link to={"/user/update/"}
+                                <Link to={"/project/update-participant/" + this.props.match.params.projectId + this.props.match.params.projectId}
                                       className="fa fa-pencil font-2xl mr-3"/>
                                 <i className="fa fa-trash-o font-2xl"
                                    onClick={() => this.deleteParticipant(participant._id)}/>
