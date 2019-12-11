@@ -460,214 +460,278 @@ export const getParticipant = function (projectId, participantId, callback) {
 //     });
 // };
 
-// export const employeeGraph = function (callback) {
-//     db.getCollection("project").aggregate([
-//         {
-//             $unwind: "$tasks"
-//         },
-//         {
-//             $lookup: {
-//                 from: "employee",
-//                 localField: "tasks.employee",
-//                 foreignField: "_id",
-//                 as: "join_table"
-//             }
-//         },
-//         {
-//             $match: {
-//                 $and: [{
-//                     "tasks.date_of_control": {
-//                         $gte: new Date("2016-11-01T00:00:00.000+00:00")
-//                     }
-//                 }, {
-//                     "tasks.date_of_control": {
-//                         $lte: new Date("2019-12-31T00:00:00.000+00:00")
-//                     }
-//                 }, {
-//                     "tasks.status": "Выполнено в срок"
-//                 }]
-//             }
-//         },
-//         {
-//             $group: {
-//                 _id: "$join_table.fio",
-//                 "value": {
-//                     $sum: 1
-//                 }
-//             }
-//         },
-//         {
-//             $project: {
-//                             "_id": 0,
-//                           "field": { $arrayElemAt:["$_id", 0]},
-//                 "value": 1
-//             }
-//         },
-//         {
-//             $sort: {
-//                 "value": - 1
-//             }
-//         }
-//     ]).toArray(function (err, docs) {
-//         callback(docs);
-//     });
-// };
-//
-export const employeeRating = function (callback) {
-  db.getCollection("Project").aggregate([
-    {
-        $unwind: "$tasks"
-    },
-    {
-        $lookup: {
-            from: "Employee",
-            localField: "tasks.employee",
-            foreignField: "_id",
-            as: "join_table"
-        }
-    },
-    {
-        $match: {
-            $and: [{
-                "tasks.date_of_control": {
-                    $gte: new Date("2019-10-01T00:00:00.000+00:00")
-                }
-            }, {
-                "tasks.date_of_control": {
-                    $lte: new Date("2019-12-31T00:00:00.000+00:00")
-                }
-            }]
-        }
-    },
-    {
-        $group: {
-            _id: "$join_table.fio",
-            "Rating": {
-                $sum: {
-                    $cond: [{
-                        $eq: ["$tasks.status", "��������� � ����"]
-                    }, 1, {
-                        $cond: [{
-                            $eq: ["$tasks.status", "��������� �� � ����"]
-                        }, - 1, 0]
-                    }]
+export const tasksChart = function (dateStart, dateEnd, taskStatus, filterBy, callback) {
+    db.collection("project").aggregate([
+        {
+            $unwind: "$tasks"
+        },
+        {
+            $lookup: {
+                from: "employee",
+                localField: "tasks.employee",
+                foreignField: "_id",
+                as: "join_table"
+            }
+        },
+        {
+            $match: {
+                $and: [{
+                    "tasks.date_of_control": {
+                        $gte: new Date(dateStart)
+                    }
+                }, {
+                    "tasks.date_of_control": {
+                        $lte: new Date(dateEnd)
+                    }
+                }, {
+                    "tasks.status": new RegExp(taskStatus === "all" ? "" : taskStatus, "i"),
+                }]
+            }
+        },
+        {
+            $group: {
+                _id: (() => {
+                    switch (filterBy) {
+                        case "employee":
+                            return "$join_table.fio";
+                        case "education":
+                            return "$join_table.education";
+                        case "university":
+                            return "$join_table.graduated_institution";
+                        case "project":
+                            return "$name";
+                    }
+                })(),
+                "value": {
+                    $sum: 1
                 }
             }
+        },
+        {
+            $project: {
+                "_id": 0,
+                "field": filterBy === 'project' ? "$_id" : {$arrayElemAt: ["$_id", 0]},
+                "value": 1
+            }
+        },
+        {
+            $sort: {
+                "value": -1
+            }
         }
-    },
-    {
-        $sort: {
-            "Rating": - 1,
-            
+    ]).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
+
+export const tasksByEmployee = function (callback) {
+    db.collection("project").aggregate([
+        {
+            $unwind: "$tasks"
+        },
+        {
+            $lookup: {
+                from: "employee",
+                localField: "tasks.employee",
+                foreignField: "_id",
+                as: "join_table"
+            }
+        },
+        {
+            $match: {
+                $and: [{
+                    "tasks.date_of_control": {
+                        $gte: new Date("2016-11-01T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.date_of_control": {
+                        $lte: new Date("2019-12-31T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.status": "Выполнено в срок"
+                }]
+            }
+        },
+        {
+            $group: {
+                _id: "$join_table.fio",
+                "value": {
+                    $sum: 1
+                }
+            }
+        },
+        {
+            $project: {
+                "_id": 0,
+                "field": {$arrayElemAt: ["$_id", 0]},
+                "value": 1
+            }
+        },
+        {
+            $sort: {
+                "value": -1
+            }
         }
-    }
-]).toArray(function (err, docs) {
-         callback(docs);
-     });
- };
-//
-// export const institutionGraph = function (callback) {
-//     db.getCollection("project").aggregate([
-//         {
-//             $unwind: "$tasks"
-//         },
-//         {
-//             $lookup: {
-//                 from: "employee",
-//                 localField: "tasks.employee",
-//                 foreignField: "_id",
-//                 as: "join_table"
-//             }
-//         },
-//         {
-//             $match: {
-//                 $and: [{
-//                     "tasks.date_of_control": {
-//                         $gte: new Date("2016-11-01T00:00:00.000+00:00")
-//                     }
-//                 }, {
-//                     "tasks.date_of_control": {
-//                         $lte: new Date("2019-12-31T00:00:00.000+00:00")
-//                     }
-//                 }, {
-//                     "tasks.status": "Выполнено в срок"
-//                 }]
-//             }
-//         },
-//         {
-//             $group: {
-//                 _id: "$join_table.graduated_institution",
-//                 "value": {
-//                     $sum: 1
-//                 }
-//             }
-//         },
-//         {
-//             $project: {
-//                             "_id": 0,
-//                           "field": { $arrayElemAt:["$_id", 0]},
-//                 "value": 1
-//             }
-//         },
-//         {
-//             $sort: {
-//                 "value": - 1
-//             }
-//         }
-//     ]).toArray(function (err, docs) {
-//         callback(docs);
-//     });
-// };
-//
-// export const projectGraph = function (callback) {
-//     db.getCollection("project").aggregate([
-//         {
-//             $unwind: "$tasks"
-//         },
-//         {
-//             $lookup: {
-//                 from: "employee",
-//                 localField: "tasks.employee",
-//                 foreignField: "_id",
-//                 as: "join_table"
-//             }
-//         },
-//         {
-//             $match: {
-//                 $and: [{
-//                     "tasks.date_of_control": {
-//                         $gte: new Date("2016-11-01T00:00:00.000+00:00")
-//                     }
-//                 }, {
-//                     "tasks.date_of_control": {
-//                         $lte: new Date("2019-12-31T00:00:00.000+00:00")
-//                     }
-//                 }, {
-//                     "tasks.status": "Выполнено в срок"
-//                 }]
-//             }
-//         },
-//         {
-//             $group: {
-//                 _id: "$name",
-//                 "value": {
-//                     $sum: 1
-//                 }
-//             }
-//         },
-//         {
-//             $project: {
-//                 _id: 0,
-//                 "field": "$_id",
-//                 "value": 1
-//             }
-//         },
-//         {
-//             $sort: {
-//                 "value": - 1
-//             }
-//         }
-//     ]).toArray(function (err, docs) {
-//         callback(docs);
-//     });
-// };
+    ]).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
+
+export const tasksByEducation = function (callback) {
+    db.getCollection("project").aggregate([
+        {
+            $unwind: "$tasks"
+        },
+        {
+            $lookup: {
+                from: "employee",
+                localField: "tasks.employee",
+                foreignField: "_id",
+                as: "join_table"
+            }
+        },
+        {
+            $match: {
+                $and: [{
+                    "tasks.date_of_control": {
+                        $gte: new Date("2016-11-01T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.date_of_control": {
+                        $lte: new Date("2019-12-31T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.status": "Выполнено в срок"
+                }]
+            }
+        },
+        {
+            $group: {
+                _id: "$join_table.education",
+                "value": {
+                    $sum: 1
+                }
+            }
+        },
+        {
+            $project: {
+                "_id": 0,
+                "field": {$arrayElemAt: ["$_id", 0]},
+                "value": 1
+            }
+        },
+        {
+            $sort: {
+                "value": -1
+            }
+        }
+    ]).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
+
+export const tasksByUniversity = function (callback) {
+    db.getCollection("project").aggregate([
+        {
+            $unwind: "$tasks"
+        },
+        {
+            $lookup: {
+                from: "employee",
+                localField: "tasks.employee",
+                foreignField: "_id",
+                as: "join_table"
+            }
+        },
+        {
+            $match: {
+                $and: [{
+                    "tasks.date_of_control": {
+                        $gte: new Date("2016-11-01T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.date_of_control": {
+                        $lte: new Date("2019-12-31T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.status": "Выполнено в срок"
+                }]
+            }
+        },
+        {
+            $group: {
+                _id: "$join_table.graduated_institution",
+                "value": {
+                    $sum: 1
+                }
+            }
+        },
+        {
+            $project: {
+                "_id": 0,
+                "field": {$arrayElemAt: ["$_id", 0]},
+                "value": 1
+            }
+        },
+        {
+            $sort: {
+                "value": -1
+            }
+        }
+    ]).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
+
+export const tasksByProject = function (callback) {
+    db.getCollection("project").aggregate([
+        {
+            $unwind: "$tasks"
+        },
+        {
+            $lookup: {
+                from: "employee",
+                localField: "tasks.employee",
+                foreignField: "_id",
+                as: "join_table"
+            }
+        },
+        {
+            $match: {
+                $and: [{
+                    "tasks.date_of_control": {
+                        $gte: new Date("2016-11-01T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.date_of_control": {
+                        $lte: new Date("2019-12-31T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.status": "Выполнено в срок"
+                }]
+            }
+        },
+        {
+            $group: {
+                _id: "$name",
+                "value": {
+                    $sum: 1
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                "field": "$_id",
+                "value": 1
+            }
+        },
+        {
+            $sort: {
+                "value": -1
+            }
+        }
+    ]).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
