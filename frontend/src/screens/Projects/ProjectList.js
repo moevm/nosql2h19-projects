@@ -106,6 +106,7 @@ export default class ProjectList extends Component {
                                         <th>Проект</th>
                                         <th>Теги</th>
                                         <th>Участники</th>
+                                        <th>Задачи</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -114,7 +115,8 @@ export default class ProjectList extends Component {
                                         <tr>
                                             <td>{project.name}</td>
                                             <td>{project.tags}</td>
-                                            <td>{project.count}</td>
+                                            <td>{project.count_participants}</td>
+                                            <td>{project.count_tasks}</td>
                                             <td>
                                                 {/*<Link to={"/user/update/" + user._id} className="fa fa-pencil font-2xl mr-3"></Link>*/}
                                                 {/*<i className="fa fa-trash-o font-2xl" onClick={() => this.deleteUser(user._id)}></i>*/}

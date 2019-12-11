@@ -6,7 +6,8 @@ import {
     createProject,
     updateProject,
     getProject,
-    createParticipant, getNotProjectParticipants, deleteParticipant, updateParticipant,getParticipant
+    createParticipant, getNotProjectParticipants, deleteParticipant, updateParticipant, getParticipant,
+    deleteTask
 
 
 } from '../db'
@@ -88,4 +89,9 @@ router.get('/get-participant', function(req, res, next) {
     })
 });
 
+router.post('/delete-task', function(req, res, next) {
+    deleteTask(req.body, function () {
+        res.end("OK")
+    })
+});
 module.exports = router;

@@ -22,18 +22,27 @@ export default class ProjectReviewEmployeeList extends Component {
         super(props);
         this.state = {
             tasks: []
-        }
+        };
+        this.deleteTask = this.deleteTask.bind(this);
+        this.getProjectTasks = this.getProjectTasks.bind(this);
     }
 
-    getProjectList() {
+    getProjectTasks() {
         ProjectUtil.getProjectTasks(this.props.match.params.id).then(response => this.setState({
             ...this.state,
             tasks: response.data
-        }))
+        }, () => console.log(response.data)));
+    }
+
+    deleteTask(id) {
+        ProjectUtil.deleteProjectTask({
+            projectId: this.props.match.params.id,
+            taskId: id
+        }).then(this.getProjectTasks);
     }
 
     componentDidMount() {
-        this.getProjectList();
+        this.getProjectTasks();
     }
 
     render() {
@@ -42,7 +51,7 @@ export default class ProjectReviewEmployeeList extends Component {
                 <Link to={"/project/list"} style={{marginLeft: 'auto'}}><Button block color="secondary"
                                                                                 className="mb-3 btn-project">К списку
                     проектов</Button></Link>
-                <Link to={"/project/create"} style={{marginLeft: '15px'}}><Button block color="success"
+                <Link to={"/project/create-task/" + this.props.match.params.id} style={{marginLeft: '15px'}}><Button block color="success"
                                                                                   className="mb-3 btn-project">Добавить</Button></Link>
 
                 <Table responsive bordered>
@@ -57,16 +66,16 @@ export default class ProjectReviewEmployeeList extends Component {
                     </thead>
                     <tbody>
                     {this.state.tasks.map((task) =>
-                        <tr key={task.name}>
+                        <tr key={task._id}>
                             <td>{task.name}</td>
                             <td>{moment(task.date_of_control).format("DD.MM.YYYY")}</td>
                             <td>{task.fio}</td>
                             <td>{task.status}</td>
                             <td>
-                                <Link to={"/user/update/"}
+                                <Link to={"/project/update-task/" + this.props.match.params.id + "/" + task._id}
                                       className="fa fa-pencil font-2xl mr-3"/>
                                 <i className="fa fa-trash-o font-2xl"
-                                   onClick={() => this.deleteProject()}/>
+                                   onClick={() => this.deleteTask(task._id)}/>
                             </td>
                         </tr>
                     )}

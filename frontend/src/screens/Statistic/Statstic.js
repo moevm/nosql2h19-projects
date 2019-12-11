@@ -102,10 +102,10 @@ export default class Statistic extends Component {
                                     <Input type="select" name="filterBy"
                                            value={this.state.formData.filterBy}
                                            onChange={this.handleInputChange}>
-                                        <option value="employee">Сотрудник</option>
-                                        <option value="project">Проект</option>
-                                        <option value="university">Университет</option>
-                                        <option value="education">Образование</option>
+                                        <option value="employee">Сотруднику</option>
+                                        <option value="project">Проекту</option>
+                                        <option value="university">Университету</option>
+                                        <option value="education">Образованию</option>
                                     </Input>
                                 </FormGroup>
                                 <div className="form-actions">
@@ -118,7 +118,7 @@ export default class Statistic extends Component {
                     <Col xs={12} sm={9}>
                         <Card style={{minHeight: 443}}>
                             <CardHeader>
-                                <i className="fa fa-align-justify"></i>График зависимости от задач
+                                <i className="fa fa-align-justify"></i>График зависимости задач
                             </CardHeader>
                             <CardBody>
                                 <Bar data={{

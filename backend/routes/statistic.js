@@ -1,4 +1,4 @@
-import {closestDeadlines, employeeRating, tasksByEmployee, tasksChart} from '../db'
+import {closestDeadlines, employeeRating, tasksChart} from '../db'
 
 var express = require('express');
 var router = express.Router();

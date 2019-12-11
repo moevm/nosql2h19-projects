@@ -55,6 +55,9 @@ export default class ProjectUtil {
             }
         )
     }
+    static async deleteProjectTask(task) {
+        return await axios.post("http://localhost:5000/project/delete-task", task)
+    }
 
 
 }

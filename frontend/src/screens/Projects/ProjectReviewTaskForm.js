@@ -18,7 +18,7 @@ import Select from 'react-select';
 import ProjectUtil from "../../utils/projectUtil";
 
 
-export default class ProjectReviewEmployeeForm extends Component {
+export default class ProjectReviewTaskForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -38,11 +38,11 @@ export default class ProjectReviewEmployeeForm extends Component {
     }
 
     addProjectParticipant() {
-        ProjectUtil.addProjectParticipant(this.state.formData).then(() => this.props.history.push(`/project/review/${this.props.match.params.projectId}/employee/list`));
+        ProjectUtil.addProjectParticipant(this.state.formData).then(() => this.props.history.push(`/project/review/${this.props.match.params.projectId}/task/list`));
     }
 
     updateProjectParticipant() {
-        ProjectUtil.updateProjectParticipant(this.state.formData).then(() => this.props.history.push(`/project/review/${this.props.match.params.projectId}/employee/list`));
+        ProjectUtil.updateProjectParticipant(this.state.formData).then(() => this.props.history.push(`/project/review/${this.props.match.params.projectId}/task/list`));
     }
 
     onChange({target: {name, value}}) {
@@ -78,7 +78,8 @@ export default class ProjectReviewEmployeeForm extends Component {
                     }
                 }))
         }
-        ProjectUtil.getNotProjectParticipants(this.props.match.params.projectId).then(response => this.setState({
+
+        ProjectUtil.getProjectParticipants(this.props.match.params.projectId).then(response => this.setState({
             ...this.state,
             participants: response.data.map(participant => ({
                 value: participant._id,
@@ -101,20 +102,35 @@ export default class ProjectReviewEmployeeForm extends Component {
                             <CardBody>
                                 <Form>
                                     <FormGroup>
-                                        <Label htmlFor="username">Сотрудник</Label>
+                                        <Label htmlFor="role">Задача</Label>
+                                        <Input value={this.state.formData.taskName} type="text"
+                                               onChange={this.onChange} name="taskName"
+                                               placeholder="Название задачи"/>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label htmlFor="date">Дата контроля</Label>
+                                        <Input value={this.state.formData.date} type="text"
+                                               onChange={this.onChange} name="date"
+                                               placeholder="Дата контроля"/>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label htmlFor="username">Исполнитель</Label>
                                         <Select
                                             value={this.state.select}
                                             onChange={this.onChangeSelect}
                                             options={this.state.participants}
-                                            isDisabled={this.props.match.params.participantId}
-                                            name="employeeId" placeholder="ФИО"
+                                            isDisabled={this.props.match.params.taskId}
+                                            name="taskId" placeholder="ФИО"
                                         />
                                     </FormGroup>
                                     <FormGroup>
-                                        <Label htmlFor="role">Роль в проекте</Label>
-                                        <Input value={this.state.formData.role} type="text"
-                                               onChange={this.onChange} name="role"
-                                               placeholder="Роль"/>
+                                        <Label htmlFor="status">Статус</Label>
+                                        <Select
+                                            value={this.state.select}
+                                            onChange={this.onChangeSelect}
+                                            options={this.state.status}
+                                            name="status" placeholder="Статус"
+                                        />
                                     </FormGroup>
                                     <FormGroup className="form-actions">
                                         {this.props.match.params.participantId ?
@@ -123,7 +139,7 @@ export default class ProjectReviewEmployeeForm extends Component {
                                             <Button size="sm" color="success" onClick={this.addProjectParticipant}
                                                     className="mr-3">Добавить</Button>}
                                         <Link
-                                            to={"/project/review/" + this.props.match.params.projectId + "/employee/list"}><Button
+                                            to={"/project/review/" + this.props.match.params.projectId + "/task/list"}><Button
                                             type="submit" size="sm"
                                             color="secondary">Отмена</Button></Link>
                                     </FormGroup>

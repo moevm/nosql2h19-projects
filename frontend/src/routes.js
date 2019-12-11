@@ -8,6 +8,7 @@ import ProjectReview from "./screens/Projects/ProjectReview";
 import ProjectReviewEmployeeList from "./screens/Projects/ProjectReviewEmployeeList";
 import ProjectReviewTaskList from "./screens/Projects/ProjectReviewTaskList";
 import ProjectReviewEmployeeForm from "./screens/Projects/ProjectReviewEmployeeForm";
+import ProjectReviewTaskForm from "./screens/Projects/ProjectReviewTaskForm";
 import Statistic from "./screens/Statistic/Statstic";
 
 export const reviewRoutes = [
@@ -28,6 +29,8 @@ const routes = [
     {path: '/project/review/:id', name: 'Просмотр проекта', component: ProjectReview},
     {path: '/project/update-participant/:projectId/:participantId', exact: true, name: '', component: ProjectReviewEmployeeForm},
     {path: '/project/create-participant/:projectId', exact: true, name: '', component: ProjectReviewEmployeeForm},
+    {path: '/project/update-task/:projectId/:taskId', exact: true, name: '', component: ProjectReviewTaskForm},
+    {path: '/project/create-task/:projectId', exact: true, name: '', component: ProjectReviewTaskForm},
 ];
 
 export default routes;
