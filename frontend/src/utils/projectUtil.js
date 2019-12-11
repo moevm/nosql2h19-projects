@@ -37,8 +37,12 @@ export default class ProjectUtil {
         return await axios.post("http://localhost:5000/project/delete", {_id: id})
     }
 
-    static async addProjectParticipant(participant, projectId){
-        return await axios.post("http://localhost:5000/project/create", participant, projectId)
+    static async addProjectParticipant(participant){
+        return await axios.post("http://localhost:5000/project/create-participant", participant)
+    }
+
+    static async deleteParticipant(participant) {
+        return await axios.post("http://localhost:5000/project/delete-participant", participant)
     }
 
 }

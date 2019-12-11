@@ -23,7 +23,8 @@ export default class ProjectReviewEmployeeForm extends Component {
         super(props);
         this.state = {
             formData: {
-                employeeId: null,
+                projectId: this.props.match.params.projectId,
+                participantId: null,
                 role: "",
             },
             select: undefined,
@@ -37,10 +38,10 @@ export default class ProjectReviewEmployeeForm extends Component {
     }
 
     addProjectParticipant() {
-        ProjectUtil.addProjectParticipant(this.state.formData, this.props.match.params.projectId).then(() => this.props.history.push(`/project/review/${this.props.match.params.projectId}/employee/list`));
+        ProjectUtil.addProjectParticipant(this.state.formData).then(() => this.props.history.push(`/project/review/${this.props.match.params.projectId}/employee/list`));
     }
 
-    updateUser() {
+    updateProjectParticipant() {
         UserUtil.updateUser(this.state.formData).then(() => this.props.history.push("/user/list"));
     }
 
@@ -54,7 +55,7 @@ export default class ProjectReviewEmployeeForm extends Component {
     onChangeSelect(option) {
         this.setState({
             ...this.state,
-            formData: {...this.state.formData, employeeId: option.value},
+            formData: {...this.state.formData, participantId: option.value},
             select: option
         });
     }
@@ -101,7 +102,7 @@ export default class ProjectReviewEmployeeForm extends Component {
                                         />
                                     </FormGroup>
                                     <FormGroup>
-                                        <Label htmlFor="dateOfBirth">Роль в проекте</Label>
+                                        <Label htmlFor="role">Роль в проекте</Label>
                                         <Input value={this.state.formData.role} type="text"
                                                onChange={this.onChange} name="role"
                                                placeholder="Роль"/>

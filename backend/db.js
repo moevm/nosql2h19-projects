@@ -347,13 +347,13 @@ export const updateProject = function (project, callback) {
     });
 };
 
-export const createParticipant = function (participant, projectId, callback) {
+export const createParticipant = function (participant, callback) {
     db.collection('project').update({
-        _id: ObjectID(projectId)
+        _id: ObjectID(participant.projectId)
     }, {
         $push: {
             participants: {
-                "employee": ObjectID(participant._id),
+                "employee": ObjectID(participant.participantId),
                 "role": participant.role,
             }
         }
@@ -382,19 +382,19 @@ export const createParticipant = function (participant, projectId, callback) {
 //     });
 // };
 
-// export const removeParticipant = function (nameLike, callback) {
-//     db.collection('project').update({
-//         _id: ObjectId("5db00ba20a1300004f00190b")
-//     }, {
-//         $pull: {
-//             participants: {
-//                 "employee": ObjectId("5daf5117cab8f846d8ec2223")
-//             }
-//         }
-//     }).toArray(function (err, docs) {
-//         callback(docs);
-//     });
-// };
+export const deleteParticipant = function (participant, callback) {
+    db.collection('project').update({
+        _id: ObjectID(participant.projectId)
+    }, {
+        $pull: {
+            participants: {
+                "employee": ObjectID(participant.participantId)
+            }
+        }
+    }, function (err, docs) {
+        callback(docs);
+    });
+};
 //
 // export const insertTask = function (nameLike, callback) {
 //     db.collection('project').update({

@@ -6,7 +6,7 @@ import {
     createProject,
     updateProject,
     getProject,
-    createParticipant, getNotProjectParticipants,
+    createParticipant, getNotProjectParticipants, deleteParticipant,
 
 
 } from '../db'
@@ -52,20 +52,26 @@ router.post('/create', function(req, res, next) {
 });
 
 
-router.post('/update/', function(req, res, next) {
+router.post('/update', function(req, res, next) {
     updateProject(req.body, function () {
         res.end("OK")
     })
 });
 
 router.post('/delete', function(req, res, next) {
-    deleteProject(c, function () {
+    deleteProject(req.body._id, function () {
         res.end("OK")
     })
 });
 
 router.post('/create-participant', function(req, res, next) {
-    createParticipant(req.body, req.body._id, function () {
+    createParticipant(req.body, function () {
+        res.end("OK")
+    })
+});
+
+router.post('/delete-participant', function(req, res, next) {
+    deleteParticipant(req.body, function () {
         res.end("OK")
     })
 });
