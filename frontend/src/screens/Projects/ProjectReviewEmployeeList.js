@@ -11,10 +11,6 @@ export default class ProjectReviewEmployeeList extends Component {
         super(props);
         this.state = {
             participants: [],
-            data: {
-                participantId: null,
-                projectId: this.props.match.params.id,
-            }
         };
         this.deleteParticipant = this.deleteParticipant.bind(this);
         this.getProjectParticipants = this.getProjectParticipants.bind(this);
@@ -28,8 +24,10 @@ export default class ProjectReviewEmployeeList extends Component {
     }
 
     deleteParticipant(id) {
-        this.setState({...this.state, data: {...this.state.data, participantId: id}});
-        ProjectUtil.deleteParticipant(this.state.data).then(this.getProjectParticipants);
+        ProjectUtil.deleteProjectParticipant({
+            projectId: this.props.match.params.id,
+            participantId: id
+        }).then(this.getProjectParticipants);
     }
 
     componentDidMount() {
@@ -55,7 +53,7 @@ export default class ProjectReviewEmployeeList extends Component {
                             <td>{participant.fio}</td>
                             <td>{participant.role}</td>
                             <td>
-                                <Link to={"/project/update-participant/" + this.props.match.params.projectId + this.props.match.params.projectId}
+                                <Link to={"/project/update-participant/" + this.props.match.params.id + "/" + participant._id}
                                       className="fa fa-pencil font-2xl mr-3"/>
                                 <i className="fa fa-trash-o font-2xl"
                                    onClick={() => this.deleteParticipant(participant._id)}/>

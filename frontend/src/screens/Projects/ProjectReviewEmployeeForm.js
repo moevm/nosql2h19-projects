@@ -24,7 +24,7 @@ export default class ProjectReviewEmployeeForm extends Component {
         this.state = {
             formData: {
                 projectId: this.props.match.params.projectId,
-                participantId: null,
+                participantId: this.props.match.params.participantId || null,
                 role: "",
             },
             select: undefined,
@@ -32,8 +32,8 @@ export default class ProjectReviewEmployeeForm extends Component {
         };
         this.onChange = this.onChange.bind(this);
         this.onChangeSelect = this.onChangeSelect.bind(this);
-         this.addProjectParticipant = this.addProjectParticipant.bind(this);
-        // this.projectEmployee = this.updateUser.bind(this);
+        this.addProjectParticipant = this.addProjectParticipant.bind(this);
+        this.updateProjectParticipant = this.updateProjectParticipant.bind(this);
 
     }
 
@@ -42,7 +42,7 @@ export default class ProjectReviewEmployeeForm extends Component {
     }
 
     updateProjectParticipant() {
-        UserUtil.updateUser(this.state.formData).then(() => this.props.history.push("/user/list"));
+        ProjectUtil.updateProjectParticipant(this.state.formData).then(() => this.props.history.push(`/project/review/${this.props.match.params.projectId}/employee/list`));
     }
 
     onChange({target: {name, value}}) {
@@ -61,14 +61,15 @@ export default class ProjectReviewEmployeeForm extends Component {
     }
 
     componentDidMount() {
-        if (this.props.match.params.id) {
-            // UserUtil.getUser(this.props.match.params.id).then(({data}) =>
-            //     this.setState({
-            //         ...this.state, formData: {
-            //             employeeId: data.employeeId,
-            //             role: data.role,
-            //         }
-            //     }))
+        if (this.props.match.params.participantId) {
+            ProjectUtil.getProjectParticipant(
+                this.props.match.params.projectId,
+                this.props.match.params.participantId).then(({data}) =>
+                this.setState({
+                    ...this.state, formData: {
+                        role: data.role,
+                    }
+                }))
         }
         ProjectUtil.getNotProjectParticipants(this.props.match.params.projectId).then(response => this.setState({
             ...this.state,
@@ -109,12 +110,14 @@ export default class ProjectReviewEmployeeForm extends Component {
                                     </FormGroup>
                                     <FormGroup className="form-actions">
                                         {this.props.match.params.participantId ?
-                                            <Button size="sm" color="primary" onClick={this.updateUser}
+                                            <Button size="sm" color="primary" onClick={this.updateProjectParticipant}
                                                     className="mr-3">Обновить</Button> :
                                             <Button size="sm" color="success" onClick={this.addProjectParticipant}
                                                     className="mr-3">Добавить</Button>}
-                                        <Link to={"/project/review/" + this.props.match.params.projectId + "/employee/list"}><Button type="submit" size="sm"
-                                                                      color="secondary">Отмена</Button></Link>
+                                        <Link
+                                            to={"/project/review/" + this.props.match.params.projectId + "/employee/list"}><Button
+                                            type="submit" size="sm"
+                                            color="secondary">Отмена</Button></Link>
                                     </FormGroup>
                                 </Form>
                             </CardBody>

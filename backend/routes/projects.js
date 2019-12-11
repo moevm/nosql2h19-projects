@@ -6,7 +6,7 @@ import {
     createProject,
     updateProject,
     getProject,
-    createParticipant, getNotProjectParticipants, deleteParticipant, updateParticipant
+    createParticipant, getNotProjectParticipants, deleteParticipant, updateParticipant,getParticipant
 
 
 } from '../db'
@@ -79,6 +79,12 @@ router.post('/delete-participant', function(req, res, next) {
 router.post('/update-participant', function(req, res, next) {
     updateParticipant(req.body, function () {
         res.end("OK")
+    })
+});
+
+router.get('/get-participant', function(req, res, next) {
+    getParticipant(req.query.projectId, req.query.participantId, function (participant) {
+        res.end(JSON.stringify(participant))
     })
 });
 

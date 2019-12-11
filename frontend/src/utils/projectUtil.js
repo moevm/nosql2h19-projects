@@ -21,15 +21,15 @@ export default class ProjectUtil {
             {params: {id: projectId}})
     }
 
-    static async getProject(id){
+    static async getProject(id) {
         return await axios.get("http://localhost:5000/project/get", {params: {id: id}})
     }
 
-    static async addProject(project){
+    static async addProject(project) {
         return await axios.post("http://localhost:5000/project/create", project)
     }
 
-    static async updateProject(project){
+    static async updateProject(project) {
         return await axios.post("http://localhost:5000/project/update", project)
     }
 
@@ -37,12 +37,24 @@ export default class ProjectUtil {
         return await axios.post("http://localhost:5000/project/delete", {_id: id})
     }
 
-    static async addProjectParticipant(participant){
+    static async addProjectParticipant(participant) {
         return await axios.post("http://localhost:5000/project/create-participant", participant)
     }
 
-    static async deleteParticipant(participant) {
+    static async updateProjectParticipant(participant) {
+        return await axios.post("http://localhost:5000/project/update-participant", participant)
+    }
+
+    static async deleteProjectParticipant(participant) {
         return await axios.post("http://localhost:5000/project/delete-participant", participant)
     }
+
+    static async getProjectParticipant(projectId, participantId) {
+        return await axios.get("http://localhost:5000/project/get-participant", {
+                params: {projectId, participantId}
+            }
+        )
+    }
+
 
 }
