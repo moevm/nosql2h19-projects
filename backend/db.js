@@ -230,7 +230,7 @@ export const closestDeadlines = function (callback) {
         },
         {
             $sort: {
-                "tasks.date_of_control": 1,
+                "date_of_control": 1,
 
             }
         }
@@ -375,7 +375,7 @@ export const updateParticipant = function (participant, callback) {
         }
     }, {
         upsert: false
-    }).toArray(function (err, docs) {
+    }, function (err, docs) {
         callback(docs);
     });
 };
@@ -407,19 +407,20 @@ export const getParticipant = function (projectId, participantId, callback) {
         }
     }, {
         $lookup: {
-            from: "Employee",
+            from: "employee",
             localField: "participants.employee",
             foreignField: "_id",
             as: "join_table"
         }
     }, {
         $project: {
-            "participants.role": 1,
-            "join_table.fio": 1,
-
+            "role": "$participants.role",
+            "fio": {
+                $arrayElemAt: ["$join_table.fio", 0]
+            }
         }
     }]).toArray(function (err, docs) {
-        callback(docs);
+        callback(docs[0]);
     });
 };
 

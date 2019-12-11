@@ -53,6 +53,7 @@ export default class ProjectReviewEmployeeForm extends Component {
     }
 
     onChangeSelect(option) {
+        console.log(option);
         this.setState({
             ...this.state,
             formData: {...this.state.formData, participantId: option.value},
@@ -66,12 +67,20 @@ export default class ProjectReviewEmployeeForm extends Component {
                 this.props.match.params.projectId,
                 this.props.match.params.participantId).then(({data}) =>
                 this.setState({
-                    ...this.state, formData: {
+                    ...this.state,
+                    formData: {
+                        ...this.state.formData,
                         role: data.role,
+                    },
+                    select: {
+                        value: this.state.formData.participantId,
+                        label: data.fio
                     }
                 }))
         }
-        ProjectUtil.getNotProjectParticipants(this.props.match.params.projectId).then(response => this.setState({
+        const participantsFunc = this.props.match.params.participantId ?
+            ProjectUtil.getProjectParticipants : ProjectUtil.getNotProjectParticipants;
+        participantsFunc(this.props.match.params.projectId).then(response => this.setState({
             ...this.state,
             participants: response.data.map(participant => ({
                 value: participant._id,
@@ -99,6 +108,7 @@ export default class ProjectReviewEmployeeForm extends Component {
                                             value={this.state.select}
                                             onChange={this.onChangeSelect}
                                             options={this.state.participants}
+                                            isDisabled={this.props.match.params.participantId}
                                             name="employeeId" placeholder="ФИО"
                                         />
                                     </FormGroup>
