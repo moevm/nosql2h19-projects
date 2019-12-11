@@ -483,3 +483,56 @@ export const employeeGraph = function (callback) {
         callback(docs);
     });
 };
+
+export const educationGraph = function (callback) {
+    db.getCollection("Project").aggregate([
+        {
+            $unwind: "$tasks"
+        },
+        {
+            $lookup: {
+                from: "Employee",
+                localField: "tasks.employee",
+                foreignField: "_id",
+                as: "join_table"
+            }
+        },
+        {
+            $match: {
+                $and: [{
+                    "tasks.date_of_control": {
+                        $gte: new Date("2016-11-01T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.date_of_control": {
+                        $lte: new Date("2019-12-31T00:00:00.000+00:00")
+                    }
+                }, {
+                    "tasks.status": "Выполнено в срок"
+                }]
+            }
+        },
+        {
+            $group: {
+                _id: "$join_table.education",
+                "value": {
+                    $sum: 1
+                }
+            }
+        },
+        {
+            $project: {
+                            "_id": 0,
+                          "field": { $arrayElemAt:["$_id", 0]},
+                "value": 1
+            }
+        },
+        {
+            $sort: {
+                "value": - 1
+            }
+        }
+    ]).toArray(function (err, docs) {
+        callback(docs);
+    });
+};
