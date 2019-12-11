@@ -55,9 +55,24 @@ export default class ProjectUtil {
             }
         )
     }
+
+    static async addProjectTask(task) {
+        return await axios.post("http://localhost:5000/project/create-task", task)
+    }
+
+    static async updateProjectTask(task) {
+        return await axios.post("http://localhost:5000/project/update-task", task)
+    }
+
     static async deleteProjectTask(task) {
         return await axios.post("http://localhost:5000/project/delete-task", task)
     }
 
+    static async getProjectTask(projectId, taskId) {
+        return await axios.get("http://localhost:5000/project/get-task", {
+                params: {projectId, taskId}
+            }
+        )
+    }
 
 }

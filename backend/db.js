@@ -141,7 +141,8 @@ export const getProjectTasks = function (projectId, callback) {
         $unwind: "$tasks"
     }, {
         $match: {
-            "_id": ObjectID(projectId) }
+            "_id": ObjectID(projectId)
+        }
     }, {
         $lookup: {
             from: "employee",
@@ -153,7 +154,7 @@ export const getProjectTasks = function (projectId, callback) {
         $project: {
             "_id": "$tasks._id",
             "name": "$tasks.name",
-            "fio": { $arrayElemAt:["$join_table.fio", 0]},
+            "fio": {$arrayElemAt: ["$join_table.fio", 0]},
             "date_of_control": "$tasks.date_of_control",
             "status": "$tasks.status"
         }
@@ -243,7 +244,7 @@ export const employeeRating = function (callback) {
             $match: {
                 $and: [{
                     "tasks.date_of_control": {
-                        $gte: new Date("2019-10-01T00:00:00.000+00:00")
+                        $gte: new Date("2000-00-00T00:00:00.000+00:00")
                     }
                 }, {
                     "tasks.date_of_control": {
@@ -396,17 +397,17 @@ export const getParticipant = function (projectId, participantId, callback) {
 };
 
 
-export const createTask = function (participant, callback) {
-    db.getCollection("Project").update({
-        _id: ObjectId("5db00ba20a1300004f00190b")
+export const createTask = function (task, callback) {
+    db.collection("project").update({
+        _id: ObjectID(task.projectId)
     }, {
         $push: {
             tasks: {
-                "employee": participant.participantId,
-                "name": "ТЕСТ",
-                "date_of_control": "2019-10-18T00:00:00.000Z",
-                "status": "Выполнено в срок",
-                _id: new ObjectId()
+                "employee": ObjectID(task.participant),
+                "name": task.taskName,
+                "date_of_control": new Date(task.date),
+                "status": task.status,
+                _id: new ObjectID()
             }
         }
     }, function (err, docs) {
@@ -415,15 +416,15 @@ export const createTask = function (participant, callback) {
 };
 
 
-export const updateTask = function (nameLike, callback) {
-    db.getCollection("Project").update({
-        "tasks._id": ObjectId("5ddec125bd6a0000b5006ffb")
+export const updateTask = function (task, callback) {
+    db.collection("project").update({
+        "tasks._id": ObjectID(task.taskId)
     }, {
         $set: {
-            "tasks.$.status": "В работе",
-            "tasks.$.employee": ObjectId("5daf520ccab8f846d8ec2228"),
-            "tasks.$.name": "Название",
-            "tasks.$.date_of_control": ISODate("2019-12-12 00:00:00.000")
+            "tasks.$.status": task.status,
+            "tasks.$.employee": ObjectID(task.participant),
+            "tasks.$.name": task.taskName,
+            "tasks.$.date_of_control": new Date(task.date),
         }
     }, {
         upsert: false
@@ -447,6 +448,32 @@ export const deleteTask = function (task, callback) {
     });
 };
 
+export const getTask = function (projectId, taskId, callback) {
+    db.collection("project").aggregate([{
+        $unwind: "$tasks"
+    }, {
+        $match: {
+            "tasks._id": ObjectID(taskId)
+        }
+    }, {
+        $lookup: {
+            from: "employee",
+            localField: "tasks.employee",
+            foreignField: "_id",
+            as: "join_table"
+        }
+    }, {
+        $project: {
+            "name": "$tasks.name",
+            "fio": {$arrayElemAt: ["$join_table.fio", 0]},
+            "employeeId": {$arrayElemAt: ["$join_table._id", 0]},
+            "date_of_control": "$tasks.date_of_control",
+            "status": "$tasks.status"
+        }
+    }]).toArray(function (err, docs) {
+        callback(docs[0]);
+    });
+};
 
 export const tasksChart = function (dateStart, dateEnd, taskStatus, filterBy, callback) {
     db.collection("project").aggregate([
