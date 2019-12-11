@@ -3,10 +3,11 @@ import Config from "./screens/Config/Config";
 import UserList from "./screens/Users/UserList";
 import UserForm from "./screens/Users/UserForm";
 import ProjectList from "./screens/Projects/ProjectList";
+import ProjectForm from "./screens/Projects/ProjectForm";
 import ProjectReview from "./screens/Projects/ProjectReview";
 import ProjectReviewEmployeeList from "./screens/Projects/ProjectReviewEmployeeList";
 import ProjectReviewTaskList from "./screens/Projects/ProjectReviewTaskList";
-import ProjectReviewEmployeeEdit from "./screens/Projects/ProjectReviewEmployeeEdit";
+import ProjectReviewEmployeeForm from "./screens/Projects/ProjectReviewEmployeeForm";
 import Statistic from "./screens/Statistic/Statstic";
 
 export const reviewRoutes = [
@@ -22,9 +23,11 @@ const routes = [
     {path: '/user/create', exact: true, name: 'Добавление сотрудника', component: UserForm},
     {path: '/user/update/:id', exact: true, name: 'Обновление сотрудника', component: UserForm},
     {path: '/project/list', exact: true, name: 'Список проектов', component: ProjectList},
+    {path: '/project/create', exact: true, name: 'Создание проекта', component: ProjectForm},
+    {path: '/project/update/:id', exact: true, name: 'Обновление проекта', component: ProjectForm},
     {path: '/project/review/:id', name: 'Просмотр проекта', component: ProjectReview},
-    {path: '/project/update-employee/:projectId/:participantId', exact: true, name: '', component: ProjectReviewEmployeeEdit},
-    {path: '/project/add-employee/:projectId', exact: true, name: '', component: ProjectReviewEmployeeEdit},
+    {path: '/project/update-employee/:projectId/:participantId', exact: true, name: '', component: ProjectReviewEmployeeForm},
+    {path: '/project/add-employee/:projectId', exact: true, name: '', component: ProjectReviewEmployeeForm},
 ];
 
 export default routes;

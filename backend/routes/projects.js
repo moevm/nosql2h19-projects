@@ -1,4 +1,12 @@
-import {getProjects, deleteProject, getProjectParticipants, getProjectTasks} from '../db'
+import {
+    getProjects,
+    deleteProject,
+    getProjectParticipants,
+    getProjectTasks,
+    createProject,
+    updateProject,
+    getProject
+} from '../db'
 var express = require('express');
 var router = express.Router();
 
@@ -10,36 +18,37 @@ router.get('/list', function(req, res, next) {
 });
 
 router.get('/participants', function(req, res, next) {
-    getProjectParticipants(req.query.id, function (projects) {
-        res.end(JSON.stringify(projects))
+    getProjectParticipants(req.query.id, function (participants) {
+        res.end(JSON.stringify(participants))
     })
 });
 
 router.get('/tasks', function(req, res, next) {
-    getProjectTasks(req.query.id, function (projects) {
-        res.end(JSON.stringify(projects))
+    getProjectTasks(req.query.id, function (tasks) {
+        res.end(JSON.stringify(tasks))
+    })
+});
+
+router.get('/get', function(req, res, next) {
+    getProject(req.query.id, function (project) {
+        res.end(JSON.stringify(project))
     })
 });
 
 
-// router.get('/get', function(req, res, next) {
-//     getUser(req.query.id, function (user) {
-//         res.end(JSON.stringify(user))
-//     })
-// });
+router.post('/create', function(req, res, next) {
+    createProject(req.body, function () {
+        res.end("OK")
+    })
+});
 
-// router.post('/create', function(req, res, next) {
-//     addUser(req.body, function () {
-//         res.end("OK")
-//     })
-// });
-//
-// router.post('/update', function(req, res, next) {
-//     updateUser(req.body, function () {
-//         res.end("OK")
-//     })
-// });
-//
+
+router.post('/update/', function(req, res, next) {
+    updateProject(req.body, function () {
+        res.end("OK")
+    })
+});
+
 router.post('/delete', function(req, res, next) {
     deleteProject(req.body._id, function () {
         res.end("OK")

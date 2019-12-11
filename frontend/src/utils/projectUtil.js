@@ -16,18 +16,18 @@ export default class ProjectUtil {
             {params: {id: projectId}})
     }
 
-    // static async getUser(id){
-    //     return await axios.get("http://localhost:5000/user/get", {params: {id: id}})
-    // }
-    //
-    // static async addUser(user){
-    //     return await axios.post("http://localhost:5000/user/create", user)
-    // }
-    //
-    // static async updateUser(user){
-    //     return await axios.post("http://localhost:5000/user/update", user)
-    // }
-    //
+    static async getProject(id){
+        return await axios.get("http://localhost:5000/project/get", {params: {id: id}})
+    }
+
+    static async addProject(project){
+        return await axios.post("http://localhost:5000/project/create", project)
+    }
+
+    static async updateProject(project){
+        return await axios.post("http://localhost:5000/project/update", project)
+    }
+
     static async deleteProject(id) {
         return await axios.post("http://localhost:5000/project/delete", {_id: id})
     }

@@ -302,11 +302,38 @@ export const employeeRating = function (callback) {
 //     });
 // };
 //
-// export const insertProject = function (nameLike, callback) {
-//     db.collection('project').insertOne({"name":"PaxPeer","tags":"Теги"}).toArray(function (err, docs) {
-//         callback(docs);
-//     });
-// };
+
+export const getProject = function (id, callback) {
+    db.collection('project').findOne({_id: ObjectID(id)}, function (err, docs) {
+        callback(docs);
+    });
+};
+
+export const createProject = function (project, callback) {
+    db.collection('project').insertOne({
+        name: project.projectName,
+        tags: project.tags,
+        tasks: [],
+        participants: [],
+    },function (err, docs) {
+        callback(docs);
+    });
+};
+
+export const updateProject = function (project, callback) {
+    db.collection('project').update({
+        _id: ObjectID(project._id)
+    }, {
+        $set: {
+            name: project.projectName,
+            tags: project.tags,
+        }
+    }, {
+        upsert: false
+    }, function (err, docs) {
+        callback(docs);
+    });
+};
 //
 // export const insertParticipant = function (nameLike, callback) {
 //     db.collection('project').update({
@@ -341,19 +368,7 @@ export const employeeRating = function (callback) {
 //     });
 // };
 //
-// export const updateProject = function (nameLike, callback) {
-//     db.collection('project').update({
-//         _id: ObjectId("5db00ba20a1300004f00190b")
-//     }, {
-//         $set: {
-//             tags: "Hello"
-//         }
-//     }, {
-//         upsert: false
-//     }).toArray(function (err, docs) {
-//         callback(docs);
-//     });
-// };
+
 //
 // export const updateParticipant = function (nameLike, callback) {
 //     db.collection('project').update({

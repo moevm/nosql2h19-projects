@@ -23,7 +23,7 @@ const options = [
     {value: 'vanilla', label: 'Vanilla'},
 ];
 
-export default class ProjectReviewEmployeeEdit extends Component {
+export default class ProjectReviewEmployeeForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
