@@ -593,6 +593,7 @@ export const institutionRating = function (callback) {
     });
 };
 export const educationRating = function (callback) {
+    
     db.getCollection("Project").aggregate([
         {
             $unwind: "$tasks"
