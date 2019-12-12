@@ -319,6 +319,8 @@ export const updateProject = function (project, callback) {
     });
 };
 
+
+
 export const createParticipant = function (participant, callback) {
     db.collection('project').update({
         _id: ObjectID(participant.projectId)
