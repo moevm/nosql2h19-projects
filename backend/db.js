@@ -643,7 +643,6 @@ export const educationRating = function (callback) {
 };
 
 
-
 export const projectRating = function (callback) {
     db.getCollection("Project").aggregate([
         {
